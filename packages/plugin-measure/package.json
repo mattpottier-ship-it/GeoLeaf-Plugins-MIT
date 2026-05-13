@@ -1,0 +1,58 @@
+{
+    "name": "@geoleaf-plugins/measure",
+    "version": "1.0.0",
+    "type": "module",
+    "license": "MIT",
+    "description": "GeoLeaf Measure Plugin — Distance, surface, GPS & annotation tools with GeoJSON export",
+    "main": "dist/geoleaf-measure.plugin.js",
+    "module": "dist/geoleaf-measure.plugin.js",
+    "exports": {
+        ".": {
+            "import": "./dist/geoleaf-measure.plugin.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist/",
+        "src/",
+        "LICENSE",
+        "README.md"
+    ],
+    "scripts": {
+        "clean": "rimraf dist",
+        "build": "rollup -c",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "test:coverage": "vitest run --coverage",
+        "prepublishOnly": "npm run build"
+    },
+    "dependencies": {
+        "@geoleaf/core": "*",
+        "@turf/distance": "^7.1.0",
+        "@turf/length": "^7.1.0",
+        "@turf/area": "^7.1.0",
+        "@turf/circle": "^7.1.0",
+        "@turf/centroid": "^7.1.0",
+        "@turf/helpers": "^7.1.0"
+    },
+    "peerDependencies": {
+        "maplibre-gl": "*"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^28.0.3",
+        "@rollup/plugin-node-resolve": "^16.0.3",
+        "@rollup/plugin-replace": "^6.0.3",
+        "@rollup/plugin-typescript": "^12.1.2",
+        "@vitest/coverage-istanbul": "^3.2.4",
+        "happy-dom": "^20.9.0",
+        "rimraf": "^5.0.5",
+        "rollup": "^4.12.0",
+        "rollup-plugin-postcss": "*",
+        "typescript": "^5.8.2",
+        "vitest": "^3.2.4"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org",
+        "access": "public"
+    }
+}
