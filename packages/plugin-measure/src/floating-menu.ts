@@ -33,6 +33,7 @@ let _onToolSelect: ((type: MeasureType | null) => void) | undefined;
 let _onUnitsChange: ((u: Partial<Units>) => void) | undefined;
 let _onClearAll: (() => void) | undefined;
 let _onExport: (() => void) | undefined;
+let _submenuOpenListener: ((e: Event) => void) | null = null;
 
 /** Callbacks provided by the public API layer. */
 export interface MenuCallbacks {
@@ -182,6 +183,10 @@ export function getMenuHeight(): number {
 
 /** Removes the menu DOM and resets all module state. */
 export function destroyMenu(): void {
+    if (_submenuOpenListener) {
+        document.removeEventListener("geoleaf:submenu:open", _submenuOpenListener);
+        _submenuOpenListener = null;
+    }
     _resizeObserver?.disconnect();
     _resizeObserver = null;
     _root?.parentNode?.removeChild(_root);
@@ -317,6 +322,12 @@ function _buildDOM(map: any, cfg: MeasureConfig): void {
     _wireDrag(handle, container);
     wireTouchDrag(handle, container, () => _root);
     _wireTips();
+
+    _submenuOpenListener = (e: Event) => {
+        const ce = e as CustomEvent<{ id: string }>;
+        if (ce.detail?.id !== "measure" && _isOpen) _close();
+    };
+    document.addEventListener("geoleaf:submenu:open", _submenuOpenListener);
 }
 
 function _buildToolBtn(tool: ToolDef): HTMLButtonElement {
@@ -382,6 +393,9 @@ function _open(): void {
     _isOpen = true;
     _menuEl?.classList.remove("gl-measure-menu--hidden");
     _onToggle?.(true);
+    document.dispatchEvent(
+        new CustomEvent("geoleaf:submenu:open", { detail: { id: "measure" }, bubbles: false }),
+    );
 }
 
 function _close(): void {
